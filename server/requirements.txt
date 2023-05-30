@@ -1,3 +1,4 @@
 flask
 flask-mqtt
 Flask-SocketIO
+sqlalchemy

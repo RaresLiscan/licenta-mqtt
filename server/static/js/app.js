@@ -12,17 +12,31 @@ $(document).ready(function () {
     },
   });
 
-  function addData(label, data) {
-    myChart.data.labels.push(label);
-    myChart.data.datasets.forEach((dataset) => {
+  const temperatureChart = new Chart(
+    document.getElementById("temperatureChart").getContext("2d"),
+    {
+      type: "line",
+      data: {
+        datasets: [{ label: "Temperature" }],
+      },
+      options: {
+        borderWidth: 3,
+        borderColor: ["rgba(255, 99, 132, 1)"],
+      },
+    }
+  );
+
+  function addData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
       dataset.data.push(data);
     });
-    myChart.update();
+    chart.update();
   }
 
-  function removeFirstData() {
-    myChart.data.labels.splice(0, 1);
-    myChart.data.datasets.forEach((dataset) => {
+  function removeFirstData(chart) {
+    chart.data.labels.splice(0, 1);
+    chart.data.datasets.forEach((dataset) => {
       dataset.data.shift();
     });
   }
@@ -38,8 +52,26 @@ $(document).ready(function () {
 
     // Show only MAX_DATA_COUNT data
     if (myChart.data.labels.length > MAX_DATA_COUNT) {
-      removeFirstData();
+      removeFirstData(myChart);
     }
-    addData(msg.date, msg.value);
+    addData(myChart, msg.date, msg.value);
   });
+
+  socket.on("updateTemperature", function (msg) {
+    console.log("Received data: " + msg.date + " :: " + msg.value);
+
+    if (temperatureChart.data.labels.length > MAX_DATA_COUNT) {
+      removeFirstData(temperatureChart);
+    }
+    addData(temperatureChart, msg.date, msg.value);
+  });
+
+  function getGlobalData() {
+    fetch("http://localhost:5000/measurements")
+      .then((response) => response.json())
+      .then(console.log)
+      .catch((error) => console.error(error));
+  }
+
+  getGlobalData();
 });
