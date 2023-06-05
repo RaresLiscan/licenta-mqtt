@@ -38,7 +38,7 @@ void setup()
     Serial.println(WiFi.localIP());
     // connecting to a mqtt broker
     client.setServer(mqtt_broker, mqtt_port);
-    client.setCallback(callback);
+
     while (!client.connected())
     {
         String client_id = "esp32-client-";
@@ -56,8 +56,8 @@ void setup()
         }
     }
     // publish and subscribe
-//    client.publish(topic, "Hi EMQX I'm ESP32 ^^");
-//    client.subscribe(topic);
+    //    client.publish(topic, "Hi EMQX I'm ESP32 ^^");
+    //    client.subscribe(topic);
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -75,19 +75,17 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void loop()
 {
-//    client.loop();
     float hum = dht.readHumidity();
     float temp = dht.readTemperature();
-    Serial.println(hum);
-    Serial.println(temp);
-    
-    if (!isnan(hum) && !isnan(temp)) {
-      char message[10];
-      sprintf(message, "%02f", hum);
-      client.publish(humidity_topic, message);
 
-      sprintf(message, "%02f", temp);
-      client.publish(temperature_topic, message);
+    if (!isnan(hum) && !isnan(temp))
+    {
+        char message[10];
+        sprintf(message, "%02f", hum);
+        client.publish(humidity_topic, message);
+
+        sprintf(message, "%02f", temp);
+        client.publish(temperature_topic, message);
     }
     delay(1000);
 }
