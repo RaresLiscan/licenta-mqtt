@@ -16,6 +16,7 @@ app.config["MQTT_TLS_ENABLED"] = False  # If your server supports TLS, set it Tr
 topic = "esp32/test"
 topic2 = "ceva"
 
+
 mqtt_client = Mqtt(app)
 
 
@@ -24,7 +25,6 @@ def handle_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected successfully")
         mqtt_client.subscribe(topic)  # subscribe topic
-        mqtt_client.subscribe(topic2)
     else:
         print("Bad connection. Code:", rc)
 

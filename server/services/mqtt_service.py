@@ -10,30 +10,30 @@ DEFAULT_TEMPERATURE = -200
 latest_humidtity_data = DEFAULT_HUMIDITY
 latest_temperature_data = DEFAULT_TEMPERATURE
 
+
 def handle_message(message, socketio):
     mqtt_latest_data = message.payload.decode()
 
     global latest_humidtity_data
     global latest_temperature_data
 
-    if (message.topic == humidity_topic):
+    if message.topic == humidity_topic:
         latest_humidtity_data = mqtt_latest_data
         socketio.emit(
             "updateHumidity",
             {"value": latest_humidtity_data, "date": get_current_datetime()},
         )
-    elif (message.topic == temperature_topic):
+    elif message.topic == temperature_topic:
         latest_temperature_data = mqtt_latest_data
-        
+
         socketio.emit(
             "updateTemperature",
             {"value": latest_temperature_data, "date": get_current_datetime()},
         )
 
-    if ((latest_humidtity_data != DEFAULT_HUMIDITY) and (latest_temperature_data != DEFAULT_TEMPERATURE)):
+    if (latest_humidtity_data != DEFAULT_HUMIDITY) and (
+        latest_temperature_data != DEFAULT_TEMPERATURE
+    ):
         add_data(latest_humidtity_data, latest_temperature_data)
-        print("called")
         latest_temperature_data = DEFAULT_TEMPERATURE
         latest_humidtity_data = DEFAULT_TEMPERATURE
-        
-    

@@ -50,7 +50,6 @@ $(document).ready(function () {
   socket.on("updateHumidity", function (msg) {
     console.log("Received sensorData :: " + msg.date + " :: " + msg.value);
 
-    // Show only MAX_DATA_COUNT data
     if (myChart.data.labels.length > MAX_DATA_COUNT) {
       removeFirstData(myChart);
     }
@@ -65,13 +64,4 @@ $(document).ready(function () {
     }
     addData(temperatureChart, msg.date, msg.value);
   });
-
-  function getGlobalData() {
-    fetch("http://localhost:5000/measurements")
-      .then((response) => response.json())
-      .then(console.log)
-      .catch((error) => console.error(error));
-  }
-
-  getGlobalData();
 });
