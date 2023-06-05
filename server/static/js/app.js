@@ -1,10 +1,11 @@
 $(document).ready(function () {
   const ctx = document.getElementById("myChart").getContext("2d");
 
-  const myChart = new Chart(ctx, {
+  const humidityChart = new Chart(ctx, {
     type: "line",
     data: {
       datasets: [{ label: "Humidity" }],
+      labels: [23, 24, 25, 30],
     },
     options: {
       borderWidth: 3,
@@ -43,17 +44,16 @@ $(document).ready(function () {
 
   const MAX_DATA_COUNT = 10;
   //connect to the socket server.
-  //   var socket = io.connect("http://" + document.domain + ":" + location.port);
   var socket = io.connect();
 
   //receive details from server
   socket.on("updateHumidity", function (msg) {
     console.log("Received sensorData :: " + msg.date + " :: " + msg.value);
 
-    if (myChart.data.labels.length > MAX_DATA_COUNT) {
-      removeFirstData(myChart);
+    if (humidityChart.data.labels.length > MAX_DATA_COUNT) {
+      removeFirstData(humidityChart);
     }
-    addData(myChart, msg.date, msg.value);
+    addData(humidityChart, msg.date, msg.value);
   });
 
   socket.on("updateTemperature", function (msg) {

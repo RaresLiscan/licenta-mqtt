@@ -2,12 +2,9 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO
 from flask_mqtt import Mqtt
 from services.mqtt_service import handle_message
-from database.base import Base, sql_engine
-from database.measurements import read_all_measurements
-import json
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "donsky!"
+app.config["SECRET_KEY"] = "licenta-mqtt"
 app.config["MQTT_BROKER_URL"] = "test.mosquitto.org"
 app.config["MQTT_BROKER_PORT"] = 1883
 app.config["MQTT_KEEPALIVE"] = 5  # Set KeepAlive time in seconds
@@ -30,6 +27,7 @@ def handle_connect(client, userdata, flags, rc):
 @mqtt_client.on_message()
 def handle_mqtt_message(client, userdata, message):
     handle_message(message, socketio)
+
 
 @app.route("/")
 def index():

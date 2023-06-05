@@ -4,6 +4,7 @@ import time
 
 last_add_timestamp = 0
 
+
 class Measurement(Base):
     __tablename__ = "measurements"
 
@@ -17,6 +18,10 @@ class Measurement(Base):
         self.humidity = humidity
         self.temperature = temperature
 
+    def __init__(self, humidity, temperature):
+        self.timestamp = (time.time() * 1000).__floor__()
+        self.humidity = humidity
+        self.temperature = temperature
 
     def __repr__(self):
         return f"({self.timestamp}: [{self.humidity}, {self.temperature}])"
@@ -27,8 +32,8 @@ Base.metadata.create_all(sql_engine)
 
 def add_data(humidity, temperature):
     current_timestamp = (time.time() * 1000).__floor__()
-    if (current_timestamp - last_add_timestamp > 1000):
-        measurement = Measurement(current_timestamp, humidity, temperature)
+    if current_timestamp - last_add_timestamp > 1000:
+        measurement = Measurement(humidity, temperature)
         session.add(measurement)
         session.commit()
 
